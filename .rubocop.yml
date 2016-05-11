@@ -1,0 +1,13 @@
+Metrics/LineLength:
+  Max: 104
+
+Style/Documentation:
+  Exclude:
+    - 'spec/**/*'
+    - 'test/**/*'
+    - 'lib/git-rb.rb'
+
+Style/FileName:
+  Exclude:
+    - 'lib/git-rb.rb'
+    - 'spec/git-rb_spec.rb'
