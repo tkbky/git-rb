@@ -1,4 +1,5 @@
 require 'git-rb/blob'
+require 'git-rb/index'
 
 module GitRb
   class Api
@@ -15,8 +16,12 @@ module GitRb
       def add(path)
         blob = GitRb::Blob.new(path)
         FileUtils.mkdir_p(blob.directory)
-        File.open(blob.path, 'w') { |f| f.write(blob.deflated_content) }
-        File.open(GitRb::INDEX_PATH, 'a') { |f| f.puts("#{blob.sha1} #{blob.path}") }
+        File.open(blob.object_path, 'w') { |f| f.write(blob.deflated_content) }
+        GitRb::Index.new.add(blob)
+      end
+
+      def ls_files
+        puts GitRb::Index.new.content
       end
 
     end

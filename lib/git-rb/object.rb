@@ -7,7 +7,7 @@ module GitRb
     DIR = 'objects'
 
     def content
-      @content ||= File.read(@path)
+      @content ||= File.read(@raw_path)
     end
 
     def deflated_content

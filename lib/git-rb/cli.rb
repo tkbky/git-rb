@@ -12,5 +12,10 @@ module GitRb
     def add(path)
       GitRb::Api.add(path)
     end
+
+    desc 'ls-files', 'Show information about files in the index and the working tree'
+    def ls_files
+      GitRb::Api.ls_files
+    end
   end
 end
