@@ -7,38 +7,6 @@ module GitRb
 
     REINIT_MSG = 'Reinitialized existing Git repository in'
 
-    ROOT_DIR = '.git'
-
-    DOT_GIT_DIRS = [
-      "hooks",
-      "info",
-      "objects/info",
-      "objects/pack",
-      "refs/heads",
-      "refs/tags"
-    ].freeze
-
-    HOOK_INSTRUCTION = '# add shell script and make executable to enable'
-
-    HOOK_FILES = [
-      "hooks/applypatch-msg.sample",
-      "hooks/commit-msg.sample",
-      "hooks/post-update.sample",
-      "hooks/pre-applypatch.sample",
-      "hooks/pre-commit.sample",
-      "hooks/pre-push.sample",
-      "hooks/pre-rebase.sample",
-      "hooks/prepare-commit-msg.sample",
-      "hooks/update.sample"
-    ].freeze
-
-    DOT_GIT_FILES = [
-      "HEAD",
-      "config",
-      "description",
-      *HOOK_FILES
-    ].freeze
-
     class << self
       def init(dir, config)
         @config = config
@@ -48,7 +16,7 @@ module GitRb
       private
 
       def init?(dir)
-        Dir.exist?(File.join(dir, ROOT_DIR)) || DOT_GIT_DIRS.all? { |dir| Dir.exists?(dir) }
+        Dir.exist?(File.join(dir, GitRb::ROOT_DIR)) || GitRb::DOT_GIT_DIRS.all? { |dir| Dir.exists?(dir) }
       end
 
       def do_init(dir)
@@ -62,8 +30,8 @@ module GitRb
       end
 
       def init_common
-        FileUtils.mkdir_p(ROOT_DIR)
-        FileUtils.cd(ROOT_DIR) do
+        FileUtils.mkdir_p(GitRb::ROOT_DIR)
+        FileUtils.cd(GitRb::ROOT_DIR) do
           mk_dirs
           mk_files
         end
@@ -75,7 +43,7 @@ module GitRb
       end
 
       def mk_dirs
-        DOT_GIT_DIRS.each { |dir| FileUtils.mkdir_p(dir) }
+        GitRb::DOT_GIT_DIRS.each { |dir| FileUtils.mkdir_p(dir) }
       end
 
       def mk_files
@@ -84,7 +52,7 @@ module GitRb
           File.open(path, 'w') do |f|
             case path
             when /config/ then f.write(@config.to_s)
-            when /hooks/ then f.write(HOOK_INSTRUCTION)
+            when /hooks/ then f.write(GitRb::HOOK_INSTRUCTION)
             end
           end
         end
