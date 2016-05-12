@@ -2,28 +2,61 @@ require 'spec_helper'
 
 RSpec.describe GitRb::Repository do
 
-  subject { described_class }
+  subject(:repository) { described_class }
 
   describe '.init' do
 
-    context 'when not initialized' do
+    subject(:init) { repository.init(dir, config) }
 
-      before { allow(subject).to receive(:init?).and_return(false) }
+    let(:dir) { 'foo' }
+    let(:config) { instance_double(GitRb::Config) }
 
-      it do
-        expect(subject).to receive(:do_init).once
-        subject.init('')
+    context 'when initialize a bare repository' do
+
+      before { allow(config).to receive(:bare).and_return(true) }
+
+      context 'when not initialized' do
+
+        before { allow(repository).to receive(:init?).and_return(false) }
+
+        it do
+          expect(repository).to receive(:init_bare).once
+          init
+        end
+
+      end
+
+      context 'when already initialized' do
+
+        before { allow(repository).to receive(:init?).and_return(true) }
+
+        pending 'Not implemented'
+
       end
 
     end
 
-    context 'when already initialized' do
+    context 'when initialize a repository' do
 
-      before { allow(subject).to receive(:init?).and_return(true) }
+      before { allow(config).to receive(:bare).and_return(false) }
 
-      it do
-        expect(subject).to receive(:do_reinit).once
-        subject.init('')
+      context 'when not initialized' do
+
+        before { allow(repository).to receive(:init?).and_return(false) }
+
+        it do
+          expect(repository).to receive(:init_common).once
+          init
+        end
+
+      end
+
+      context 'when already initialized' do
+
+        before { allow(repository).to receive(:init?).and_return(true) }
+
+        pending 'Not implemented'
+
       end
 
     end

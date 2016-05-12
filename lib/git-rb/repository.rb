@@ -10,47 +10,63 @@ module GitRb
     ROOT_DIR = '.git'
 
     DOT_GIT_DIRS = [
-      "#{ROOT_DIR}/hooks",
-      "#{ROOT_DIR}/info",
-      "#{ROOT_DIR}/objects/info",
-      "#{ROOT_DIR}/objects/pack",
-      "#{ROOT_DIR}/refs/heads",
-      "#{ROOT_DIR}/refs/tags"
+      "hooks",
+      "info",
+      "objects/info",
+      "objects/pack",
+      "refs/heads",
+      "refs/tags"
     ].freeze
 
     HOOK_INSTRUCTION = '# add shell script and make executable to enable'
 
-    DOT_GIT_FILES = {
-      "#{ROOT_DIR}/HEAD" => '',
-      "#{ROOT_DIR}/config" => GitRb::Config::CORE_STR,
-      "#{ROOT_DIR}/description" => '',
-      "#{ROOT_DIR}/hooks/applypatch-msg.sample" => HOOK_INSTRUCTION,
-      "#{ROOT_DIR}/hooks/commit-msg.sample" => HOOK_INSTRUCTION,
-      "#{ROOT_DIR}/hooks/post-update.sample" => HOOK_INSTRUCTION,
-      "#{ROOT_DIR}/hooks/pre-applypatch.sample" => HOOK_INSTRUCTION,
-      "#{ROOT_DIR}/hooks/pre-commit.sample" => HOOK_INSTRUCTION,
-      "#{ROOT_DIR}/hooks/pre-push.sample" => HOOK_INSTRUCTION,
-      "#{ROOT_DIR}/hooks/pre-rebase.sample" => HOOK_INSTRUCTION,
-      "#{ROOT_DIR}/hooks/prepare-commit-msg.sample" => HOOK_INSTRUCTION,
-      "#{ROOT_DIR}/hooks/update.sample" => HOOK_INSTRUCTION
-    }.freeze
+    HOOK_FILES = [
+      "hooks/applypatch-msg.sample",
+      "hooks/commit-msg.sample",
+      "hooks/post-update.sample",
+      "hooks/pre-applypatch.sample",
+      "hooks/pre-commit.sample",
+      "hooks/pre-push.sample",
+      "hooks/pre-rebase.sample",
+      "hooks/prepare-commit-msg.sample",
+      "hooks/update.sample"
+    ].freeze
+
+    DOT_GIT_FILES = [
+      "HEAD",
+      "config",
+      "description",
+      *HOOK_FILES
+    ].freeze
 
     class << self
-      def init(dir, opts = {})
-        @config = Config.new(opts[:config])
+      def init(dir, config)
+        @config = config
         init?(dir) ? do_reinit(dir) : do_init(dir)
       end
 
       private
 
       def init?(dir)
-        Dir.exist?(File.join(dir, ROOT_DIR))
+        Dir.exist?(File.join(dir, ROOT_DIR)) || DOT_GIT_DIRS.all? { |dir| Dir.exists?(dir) }
       end
 
       def do_init(dir)
         puts "#{INIT_MSG} #{dir}"
+        @config.bare ? init_bare : init_common
+      end
+
+      def init_bare
         mk_dirs
         mk_files
+      end
+
+      def init_common
+        FileUtils.mkdir_p(ROOT_DIR)
+        FileUtils.cd(ROOT_DIR) do
+          mk_dirs
+          mk_files
+        end
       end
 
       def do_reinit(dir)
@@ -65,7 +81,12 @@ module GitRb
       def mk_files
         DOT_GIT_FILES.each do |path, content|
           next if File.exist?(path)
-          File.open(path, 'w') { |f| f.write(content) }
+          File.open(path, 'w') do |f|
+            case path
+            when /config/ then f.write(@config.to_s)
+            when /hooks/ then f.write(HOOK_INSTRUCTION)
+            end
+          end
         end
       end
     end
