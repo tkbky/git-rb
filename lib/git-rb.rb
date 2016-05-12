@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 require 'optparse'
 require 'git-rb/version'
+require 'git-rb/config'
 require 'git-rb/repository'
 
 module GitRb

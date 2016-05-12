@@ -22,7 +22,7 @@ module GitRb
 
     DOT_GIT_FILES = {
       "#{ROOT_DIR}/HEAD" => '',
-      "#{ROOT_DIR}/config" => '',
+      "#{ROOT_DIR}/config" => GitRb::Config::CORE_STR,
       "#{ROOT_DIR}/description" => '',
       "#{ROOT_DIR}/hooks/applypatch-msg.sample" => HOOK_INSTRUCTION,
       "#{ROOT_DIR}/hooks/commit-msg.sample" => HOOK_INSTRUCTION,
@@ -36,7 +36,8 @@ module GitRb
     }.freeze
 
     class << self
-      def init(dir, _opts = {})
+      def init(dir, opts = {})
+        @config = Config.new(opts[:config])
         init?(dir) ? do_reinit(dir) : do_init(dir)
       end
 
