@@ -11,7 +11,7 @@ module GitRb
 
     CORE_STR = <<-CORE
 [core]
-#{CORE.map { |k, v| "\s\s#{k} = #{v}" }.join("\n")}
+#{CORE.map { |k, v| "\t#{k.to_s.gsub('_', '')} = #{v}" }.join("\n")}
 CORE
 
     attr_accessor *CORE.keys
