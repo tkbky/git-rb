@@ -16,7 +16,7 @@ module GitRb
       private
 
       def init?(dir)
-        Dir.exist?(File.join(dir, GitRb::ROOT_DIR)) || GitRb::DOT_GIT_DIRS.all? { |dir| Dir.exists?(dir) }
+        Dir.exist?(File.join(dir, GitRb::ROOT_DIR)) || GitRb::DOT_GIT_DIRS.all? { |dir| Dir.exist?(dir) }
       end
 
       def do_init(dir)
@@ -47,7 +47,7 @@ module GitRb
       end
 
       def mk_files
-        DOT_GIT_FILES.each do |path, content|
+        DOT_GIT_FILES.each do |path, _content|
           next if File.exist?(path)
           File.open(path, 'w') do |f|
             case path

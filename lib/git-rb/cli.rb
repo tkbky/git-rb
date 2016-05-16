@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'thor'
 
 module GitRb
@@ -11,6 +12,12 @@ module GitRb
     desc 'add <path>', 'Add file contents to the index'
     def add(path)
       GitRb::Api.add(path)
+    end
+
+    desc 'rm <path>', 'Remove files from the working tree and from the index'
+    option :recursive, type: :boolean, aliases: :r
+    def rm(path)
+      GitRb::Api.rm(path, options)
     end
 
     desc 'ls-files', 'Show information about files in the index and the working tree'

@@ -1,8 +1,8 @@
+# frozen_string_literal: true
 require 'git-rb/object'
 
 module GitRb
   class Blob < Object
-
     attr_reader :raw_path
 
     def initialize(raw_path)
@@ -20,6 +20,5 @@ module GitRb
     def type
       :blob
     end
-
   end
 end
