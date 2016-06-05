@@ -10,9 +10,9 @@ Gem::Specification.new do |spec|
   spec.authors       = ['tkbky']
   spec.email         = ['kheryee.ting@tinkerbox.com.sg']
 
-  spec.summary       = 'TODO: Write a short summary, because Rubygems requires one.'
-  spec.description   = 'TODO: Write a longer description or delete this line.'
-  spec.homepage      = "TODO: Put your gem's website or public repo URL here."
+  spec.summary       = 'it needs no summary'
+  spec.description   = 'it needs no description'
+  spec.homepage      = 'https://it-needs-no-homepage.com'
 
   # Prevent pushing this gem to RubyGems.org by setting 'allowed_push_host', or
   # delete this section to allow pushing this gem to any host.
